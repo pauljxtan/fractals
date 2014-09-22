@@ -18,6 +18,8 @@ int main(int argc, char * argv[]) {
     if (argc < 2) {
         printf("\nImplemented fractals are:\n");
         printf(fractal_list);
+        print_usage();
+        printf("\n");
         return EXIT_SUCCESS;
     }
 
