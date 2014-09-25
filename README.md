@@ -6,7 +6,9 @@ Computing and visualizing fractals.
 ### Usage ###
 To compute Sierpinski's triangle with 10^5 iterations:
 
+```bash
 $ ./src/draw -f sierpinski -n 10000
+```
 
 (Run without arguments for list of fractals and usage.)
 
