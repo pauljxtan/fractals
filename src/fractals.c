@@ -46,12 +46,12 @@ double * barnsley(int n_iter) {
             points[i] = 0.0;
             points[i+1] = 0.16 * points[i-1];
         }
-        else if ((test >= 1) && (test <= 85)) {
+        else if (test < 86) {
             /* Use the second transformation with 85% probability */
             points[i] = 0.85 * points[i-2] + 0.04 * points[i-1];
             points[i+1] = -0.04 * points[i-2] + 0.85 * points[i-1] + 1.6;
         }
-        else if ((test >= 86) && (test <= 92)) {
+        else if (test < 93) {
             /* Use the third transformation with 7% probability */
             points[i] = 0.2 * points[i-2] - 0.26 * points[i-1];
             points[i+1] = 0.23 * points[i-2] + 0.22 * points[i-1] + 1.6;
