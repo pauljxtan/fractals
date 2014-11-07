@@ -32,6 +32,9 @@ double * heighway(int);
 /* Computes the Koch curve using an iterated function system */
 double * koch_curve(int);
 
+/* Computes a maple leaf using an iterated function system */
+double * maple_leaf(int);
+
 /* Computes Sierpinski's triangle using an iterated function system */
 double * sierpinski(int);
 
