@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 
     /* If no arguments given, list fractals */
     if (argc < 2) {
-        printf("\nImplemented fractals are:\n");
+        printf("\nPre-defined fractals are:\n");
         printf("%s", fractal_list);
         print_usage();
         printf("\n");
@@ -122,7 +122,10 @@ int main(int argc, char *argv[]) {
 }
 
 void print_usage() {
-    printf("Usage: ./draw -f fractal -n n_iter\n");
+    printf("Usage:\n");
+    printf("    draw -f fractal -n n_iter\n");
+    printf("OR\n");
+    printf("    draw -f generic -n n_iter -p file\n");
 }
 
 func_ptr lookup_func(char *fractal) {
