@@ -49,25 +49,23 @@ int main(int argc, char *argv[]) {
     /* If chosen fractal is "generic", apply a generic IFS */
     if (strcmp(fractal, "generic") == 0) {
         /* Using some temporary test values for now */
-        //int n_transforms = 3;
-        int n_transforms = 4;
-        //double beta [] = {0.5, 0.5, 0.5};
-        double beta [] = {1.0/3.0, 1.0/3.0, 1.0/3.0, 1.0/3.0};
-        //double x0 [] = {0.0, 0.5, 1.0};
-        double x0 [] = {0.0, 1.0, 0.0, 1.0};
-        //double y0 [] = {0.0, 0.5, 0.0};
-        double y0 [] = {0.0, 0.0, 1.0, 1.0};
-        double init [] = {0.0, 0.0};
-        
         n_dims = 2;
-        points = malloc(n_dims * n_iter * sizeof(double));
-        points = ifs_2d(n_iter, n_transforms, beta, x0, y0, init);
+        int n_iter = 10000;
+        double init[] = {0.00, 0.00};
+        int n_transforms = 4;
+        int probs[] = {1, 85, 7, 7};
+        double T[] = { 0.00,  0.00,  0.00,  0.16,  0.00,  0.00,
+                       0.85,  0.04, -0.04,  0.85,  0.00,  1.60,
+                       0.20, -0.26,  0.23,  0.22,  0.00,  1.60,
+                      -0.15,  0.28,  0.26,  0.24,  0.00,  0.44};
+        // points = malloc(n_dims * n_iter * sizeof(double));
+        points = ifs_2d(n_iter, n_transforms, init, probs, T);
     }
     /* If chosen fractal is not "generic", look it up and draw it */
     else {
         func = lookup_func(fractal);
         n_dims = lookup_n_dims(fractal);
-        points = malloc(n_dims * n_iter * sizeof(double));
+        //points = malloc(n_dims * n_iter * sizeof(double));
         points = func(n_iter);
     }
     
