@@ -7,7 +7,7 @@
 #include "ifs.h"
 
 int main(int argc, char *argv[]) {
-    char fractal[20];
+    char fractal[32];
     int c;
     int i, j;
     int n_iter;
@@ -15,7 +15,8 @@ int main(int argc, char *argv[]) {
     double *points;
     func_ptr func = NULL;
     int write = 0;
-    char outfile[20];
+    char infile[64];
+    char outfile[32];
     FILE *poutfile;
 
     /* If no arguments given, list fractals */
@@ -29,7 +30,7 @@ int main(int argc, char *argv[]) {
 
     /* Parse arguments */
     opterr = 0;
-    while ((c = getopt(argc, argv, "f:n:w")) != -1)
+    while ((c = getopt(argc, argv, "f:n:wp:")) != -1)
         switch (c) {
             case 'f':
                 strcpy(fractal, optarg);
@@ -40,15 +41,41 @@ int main(int argc, char *argv[]) {
             case 'w':
                 write = 1;
                 break;
-            /* Need to parse options for generic IFS here... */
+            case 'p':
+                strcpy(infile, optarg);
+                break;
             default:
                 print_usage();
                 return EXIT_FAILURE;
         }
 
+
     /* If chosen fractal is "generic", apply a generic IFS */
     if (strcmp(fractal, "generic") == 0) {
-        /* Using some temporary test values for now */
+        /* Only do 2D for now */
+        n_dims = 2;
+
+        /* Parse the parameter file */
+        FILE *pinfile = fopen(infile, "r");
+
+        double init[2];
+        fscanf(pinfile, "%lf %lf", &init[0], &init[1]);
+
+        int n_transforms;
+        fscanf(pinfile, "%d", &n_transforms);
+
+        int * probs = (int *) malloc(n_transforms * sizeof(int));
+        for (i = 0; i < n_transforms; i++)
+            fscanf(pinfile, "%d", &probs[i]);
+
+        double * T = (double *) malloc(6 * n_transforms * sizeof(double));
+        for (i = 0; i < 6 * n_transforms; i++)
+            fscanf(pinfile, "%lf", &T[i]);
+
+        fclose(pinfile);
+
+        /* Hard-coded parameters for Barnsley */
+        /*
         n_dims = 2;
         int n_iter = 10000;
         double init[] = {0.00, 0.00};
@@ -58,14 +85,13 @@ int main(int argc, char *argv[]) {
                        0.85,  0.04, -0.04,  0.85,  0.00,  1.60,
                        0.20, -0.26,  0.23,  0.22,  0.00,  1.60,
                       -0.15,  0.28,  0.26,  0.24,  0.00,  0.44};
-        // points = malloc(n_dims * n_iter * sizeof(double));
+        */
         points = ifs_2d(n_iter, n_transforms, init, probs, T);
     }
     /* If chosen fractal is not "generic", look it up and draw it */
     else {
         func = lookup_func(fractal);
         n_dims = lookup_n_dims(fractal);
-        //points = malloc(n_dims * n_iter * sizeof(double));
         points = func(n_iter);
     }
     
