@@ -18,11 +18,14 @@ You can supply your own affine transforms in an input parameter file with the fo
 * Row 2: number of transforms
 * Row 3: % probability of each transform
 * Remaining rows: each transform ("a b c d e f") where
+```
          |a b| |x|   |e|
 f(x,y) = |   | | | + | | 
          |c d| |y|   |f|
+```
 
 An example for Barnley's fern, __barnsley.in__, is provided, for which the transforms in matrix form are
+```
           | 0.00  0.00| |x|   |0.00|
 f1(x,y) = |           | | | + |    | 
           | 0.00  0.16| |y|   |0.00|
@@ -38,7 +41,7 @@ f3(x,y) = |           | | | + |    |
           |-0.15  0.28| |x|   |0.00|
 f4(x,y) = |           | | | + |    | 
           | 0.26  0.24| |y|   |0.44|
-
+```
 Usage:
 ```bash
 $ ./draw -f generic -n 10000 -p barnsley.in
