@@ -7,7 +7,7 @@ Computing and visualizing fractals.
 To compute Sierpinski's triangle with 10^5 iterations:
 
 ```bash
-$ ./src/draw -f sierpinski -n 10000
+$ draw -f sierpinski -n 10000
 ```
 (Run with -w flag to write to file without stdout.)
 (Run without arguments for list of fractals and usage.)
@@ -44,7 +44,7 @@ f4(x,y) = |           | | | + |    |
 ```
 Usage:
 ```bash
-$ ./draw -f generic -n 10000 -p barnsley.in
+$ draw -f generic -n 10000 -p inputs/barnsley.in
 ```
 
 ### Currently implemented ###
