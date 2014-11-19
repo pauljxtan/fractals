@@ -8,16 +8,16 @@
 
 int main(int argc, char *argv[]) {
     char fractal[32];
-    int c;
-    int i, j;
-    int n_iter;
-    int n_dims;
-    double *points;
-    func_ptr func = NULL;
-    int write = 0;
     char infile[64];
     char outfile[32];
+    int c;
+    int i, j;
+    int n_dims;
+    int n_iter;
+    int write = 0;
+    double *points;
     FILE *poutfile;
+    func_ptr func = NULL;
 
     /* If no arguments given, list fractals */
     if (argc < 2) {
@@ -49,46 +49,39 @@ int main(int argc, char *argv[]) {
                 return EXIT_FAILURE;
         }
 
-
-    /* If chosen fractal is "generic", apply a generic IFS */
-    if (strcmp(fractal, "generic") == 0) {
-        /* Only do 2D for now */
+    /* If chosen fractal is "generic2d", apply a generic 2D IFS */
+    /* TODO: Generalize for any dimension later */
+    if (strcmp(fractal, "generic2d") == 0) {
         n_dims = 2;
 
         /* Parse the parameter file */
         FILE *pinfile = fopen(infile, "r");
-
-        double init[2];
+        
+        /* Initial coordinates */
+        double init[n_dims];
         fscanf(pinfile, "%lf %lf", &init[0], &init[1]);
-
+        
+        /* Number of affine tranformations */
         int n_transforms;
         fscanf(pinfile, "%d", &n_transforms);
-
+        
+        /* Probability for each transformation */
         int * probs = (int *) malloc(n_transforms * sizeof(int));
         for (i = 0; i < n_transforms; i++)
             fscanf(pinfile, "%d", &probs[i]);
-
+        
+        /* Transformation coefficients */
         double * T = (double *) malloc(6 * n_transforms * sizeof(double));
         for (i = 0; i < 6 * n_transforms; i++)
             fscanf(pinfile, "%lf", &T[i]);
-
+        
         fclose(pinfile);
 
-        /* Hard-coded parameters for Barnsley */
-        /*
-        n_dims = 2;
-        int n_iter = 10000;
-        double init[] = {0.00, 0.00};
-        int n_transforms = 4;
-        int probs[] = {1, 85, 7, 7};
-        double T[] = { 0.00,  0.00,  0.00,  0.16,  0.00,  0.00,
-                       0.85,  0.04, -0.04,  0.85,  0.00,  1.60,
-                       0.20, -0.26,  0.23,  0.22,  0.00,  1.60,
-                      -0.15,  0.28,  0.26,  0.24,  0.00,  0.44};
-        */
+        /* Compute the fractal */
         points = ifs_2d(n_iter, n_transforms, init, probs, T);
     }
-    /* If chosen fractal is not "generic", look it up and draw it */
+    
+    /* If chosen fractal is not "generic2d", look it up and draw it */
     else {
         func = lookup_func(fractal);
         n_dims = lookup_n_dims(fractal);
@@ -101,14 +94,14 @@ int main(int argc, char *argv[]) {
         poutfile = fopen(outfile, "w");
     }
     
-    for (i = 0; i < (n_dims * n_iter); i += n_dims)
-    {
+    for (i = 0; i < (n_dims * n_iter); i += n_dims) {
         for (j = 0; j < n_dims; j++) {
             if (write)
                 fprintf(poutfile, "%f ", points[i + j]);
             else
                 printf("%f ", points[i + j]);
         }
+
         if (write)
             fprintf(poutfile, "\n");
         else
@@ -125,7 +118,7 @@ void print_usage() {
     printf("Usage:\n");
     printf("    draw -f fractal -n n_iter\n");
     printf("OR\n");
-    printf("    draw -f generic -n n_iter -p file\n");
+    printf("    draw -f generic2d -n n_iter -p file\n");
 }
 
 func_ptr lookup_func(char *fractal) {
