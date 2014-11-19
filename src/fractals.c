@@ -1,4 +1,4 @@
-/* The fractals. */
+/* The IFS functions for computing each fractal. */
 
 #include <math.h>
 #include <stdlib.h>
@@ -41,25 +41,25 @@ double * barnsley(int n_iter) {
     /* Iterate */
     for (i = 2; i < (2 * n_iter); i += 2) {
         test = rand() % 100;
-        if (test == 0) {
+        if (test < 0) {
             /* Use the first transformation with 1% probability */
-            points[i] = 0.0;
+            points[i]   = 0.0;
             points[i+1] = 0.16 * points[i-1];
         }
         else if (test < 86) {
             /* Use the second transformation with 85% probability */
-            points[i] = 0.85 * points[i-2] + 0.04 * points[i-1];
+            points[i]   =  0.85 * points[i-2] + 0.04 * points[i-1];
             points[i+1] = -0.04 * points[i-2] + 0.85 * points[i-1] + 1.6;
         }
         else if (test < 93) {
             /* Use the third transformation with 7% probability */
-            points[i] = 0.2 * points[i-2] - 0.26 * points[i-1];
+            points[i]   = 0.20 * points[i-2] - 0.26 * points[i-1];
             points[i+1] = 0.23 * points[i-2] + 0.22 * points[i-1] + 1.6;
         }
         else {
             /* Use the fourth transformation with 7% probability */
-            points[i] = -0.15 * points[i-2] + 0.28 * points[i-1];
-            points[i+1] = 0.26 * points[i-2] + 0.24 * points[i-1] + 0.44;
+            points[i]   = -0.15 * points[i-2] + 0.28 * points[i-1];
+            points[i+1] =  0.26 * points[i-2] + 0.24 * points[i-1] + 0.44;
         }
     }
     
@@ -142,18 +142,18 @@ double * koch_curve(int n_iter) {
     /* Iterate */
     for (i = 2; i < (2 * n_iter); i += 2) {
         test = rand() % 4;
-        if (test == 0) {
+        if (test < 1) {
             /* Use the first transformation with 1/4 probability */
             points[i]   = 1.0/3 * points[i-2];
             points[i+1] = 1.0/3 * points[i-1];
         }
-        else if (test == 1) {
+        else if (test < 2) {
             /* Use the second transformation with 1/4 probability */
             points[i]   = 1.0/6 * points[i-2] - sqrt(3)/6 * points[i-1]
                           + 1.0/3;
             points[i+1] = sqrt(3)/6 * points[i-2] + 1.0/6 * points[i-1];
         }
-        else if (test == 2) {
+        else if (test < 3) {
             /* Use the third transformation with 1/4 probability */
             points[i]   = 1.0/6 * points[i-2] + sqrt(3)/6 * points[i-1] + 0.5;
             points[i+1] = - sqrt(3)/6 * points[i-2] + 1.0/6 * points[i-1]

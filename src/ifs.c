@@ -1,6 +1,5 @@
 /* Generic iterated function systems. */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include "ifs.h"
@@ -13,7 +12,8 @@ double * ifs_2d(int n_iter, int n_transforms, double init[], int probs[],
                 double T[]) {
     int i, j;
     int test;
-    int prob_used; // Used to set upper limit for probability check
+    /* This value determines the upper limit for each probability check */
+    int prob_used; 
     /* All (x,y) coordinates */
     double * points = malloc(2 * n_iter * sizeof(double));
 
