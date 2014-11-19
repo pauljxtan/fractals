@@ -44,7 +44,7 @@ f4(x,y) = |           | | | + |    |
 ```
 Usage:
 ```bash
-$ draw -f generic -n 10000 -p inputs/barnsley.in
+$ draw -f generic2d -n 10000 -p inputs/barnsley.in
 ```
 
 ### Currently implemented ###
