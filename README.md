@@ -24,7 +24,7 @@ f(x,y) = |   | | | + | |
          |c d| |y|   |f|
 ```
 
-An example for Barnley's fern, __barnsley.in__, is provided, for which the transforms in matrix form are
+An example for Barnley's fern, __barnsley.in__ (provided in __src/inputs__) for which the transforms in matrix form are
 ```
           | 0.00  0.00| |x|   |0.00|
 f1(x,y) = |           | | | + |    | 
@@ -68,3 +68,7 @@ Fractal [function_name]
 
 ### GUI ###
 A Python-based GUI (using TKinter and matplotlib for graphing) is included at __python/fractalsgui.py__.
+
+Dependencies:
+* Tkinter
+* matplotlib (with TkAgg backend)
