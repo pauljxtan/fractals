@@ -42,6 +42,16 @@ f3(x,y) = |           | | | + |    |
 f4(x,y) = |           | | | + |    | 
           | 0.26  0.24| |y|   |0.44|
 ```
+would have the following input file:
+```
+0.00 0.00
+4
+1 85 7 7
+ 0.00  0.00  0.00  0.16  0.00  0.00
+ 0.85  0.04 -0.04  0.85  0.00  1.60
+ 0.20 -0.26  0.23  0.22  0.00  1.60
+-0.15  0.28  0.26  0.24  0.00  0.44
+```
 Usage:
 ```bash
 $ draw -f generic2d -n 10000 -p inputs/barnsley.in
@@ -55,3 +65,6 @@ Fractal [function_name]
 * Koch curve [koch_curve]
 * Maple leaf [maple_leaf]
 * Sierpinski's triangle [sierpinski]
+
+### GUI ###
+A Python-based GUI (using TKinter and matplotlib for graphing) is included at __python/fractalsgui.py__.
