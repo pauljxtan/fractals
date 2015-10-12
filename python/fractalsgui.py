@@ -2,6 +2,7 @@
 
 # TODO:
 #     interactive plot (zoom in/out, etc.)
+#         dynamic resizing
 #     generic IFS
 
 import matplotlib
@@ -18,7 +19,7 @@ from Tkinter import (Button, DoubleVar, END, Entry, Frame, IntVar, Label,
 
 fractals = {
     "Barnsley's fern"       : 'barnsley',
-    "Cantor set"            : 'cantor',
+    #"Cantor set"            : 'cantor',
     "Heighway's dragon"     : 'heighway',
     "Koch curve"            : 'koch_curve',
     "Maple leaf"            : 'maple_leaf',
