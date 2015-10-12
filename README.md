@@ -67,7 +67,7 @@ Fractal [function_name]
 * Sierpinski's triangle [sierpinski]
 
 ### GUI ###
-A Python-based GUI (using TKinter and matplotlib for graphing) is included at __python/fractalsgui.py__.
+A Python-based GUI (using TKinter and matplotlib for graphing) is included at __python/fractalsgui.py__. Still a very early version, with fixed resolution and without interactive matplotlib functionality -- stay tuned.
 
 Dependencies:
 * Tkinter
