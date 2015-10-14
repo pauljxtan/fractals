@@ -1,22 +1,19 @@
 #!/usr/bin/python
 
 # TODO:
-#     interactive plot (zoom in/out, etc.)
-#         dynamic resizing
 #     generic IFS
 
 import matplotlib
 # use the Tk backend
 matplotlib.use('TkAgg')
 from matplotlib.figure import Figure
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 from mpl_toolkits.mplot3d import Axes3D
 import subprocess
 import time
+import Tkinter as tk
 
-from Tkinter import (Button, DoubleVar, END, Entry, Frame, IntVar, Label,
-                     OptionMenu, StringVar, Tk, W)
-
+# Map fractals to odeint function names
 fractals = {
     "Barnsley's fern"       : 'barnsley',
     #"Cantor set"            : 'cantor',
@@ -28,67 +25,67 @@ fractals = {
 
 class OdeIntGui(object):
     def __init__(self, master):
-        self.frame = Frame(master)
-        self.frame.grid()
+        #---- Main frame
+        self.frame = tk.Frame(master)
+        self.frame.pack(expand=True, fill=tk.BOTH)
+        #----
+        #---- Subframes
+        self.frame_menus = tk.Frame(self.frame)
+        self.frame_entries = tk.Frame(self.frame)
+        self.frame_canvas = tk.Frame(self.frame)
+        self.frame_buttons = tk.Frame(self.frame)
 
-        #--- Subframes
-        self.frame_menus = Frame(self.frame)
-        self.frame_entries = Frame(self.frame)
-        self.frame_canvas = Frame(self.frame)
-        self.frame_buttons = Frame(self.frame)
-
-        self.frame_menus.grid(row=0)
-        self.frame_entries.grid(row=1)
-        self.frame_canvas.grid(row=2)
-        self.frame_buttons.grid(row=3)
-        #---
-
-        #--- String variables
-        self.fractal = StringVar(self.frame_menus)
+        self.frame_menus.pack(expand=True, fill=tk.BOTH, padx=8)
+        self.frame_entries.pack(expand=True, fill=tk.BOTH, padx=8)
+        self.frame_canvas.pack(expand=True, fill=tk.BOTH, padx=8)
+        self.frame_buttons.pack(expand=True, fill=tk.BOTH, padx=8, pady=8)
+        #----
+        #---- String variables
+        self.fractal = tk.StringVar(self.frame_menus)
         # SET DEFAULTS HERE
         self.fractal.set("Barnsley's fern")
         self.prev_fractal = self.fractal.get()
-        #---
+        #----
+        #---- Integer variables
+        self.niter = tk.IntVar(self.frame_entries)
+        #----
+        #---- Menu subframe
+        self.label_fractals = tk.Label(self.frame_menus, text="Fractal:")
+        self.menu_fractals = tk.OptionMenu(self.frame_menus, self.fractal,
+                                           *fractals.keys(),
+                                           command=self.menu_onclick)
+        self.label_niter = tk.Label(self.frame_menus,
+                                    text="Number of iterations:")
+        self.entry_niter = tk.Entry(self.frame_menus, textvariable=self.niter,
+                                    width=5)
 
-        #--- Integer variables
-        self.niter = IntVar(self.frame_entries)
-        #---
+        self.label_fractals.pack(expand=True, fill=tk.BOTH, side=tk.LEFT)
+        self.menu_fractals.pack(expand=True, fill=tk.BOTH, side=tk.LEFT)
+        self.label_niter.pack(expand=True, fill=tk.BOTH, side=tk.LEFT)
+        self.entry_niter.pack(expand=True, fill=tk.BOTH, side=tk.LEFT)
+        #----
+        #---- Canvas subframe
+        self.figure = Figure(figsize=(7.8, 4.5))
+        self.canvas = FigureCanvasTkAgg(self.figure, self.frame_canvas)
 
-        #--- Menu subframe
-        self.label_fractals = Label(self.frame_menus, text="Fractal:")
-        self.menu_fractals = OptionMenu(self.frame_menus, self.fractal,
-                                        *fractals.keys(),
-                                        command=self.menu_onclick)
-        self.label_niter = Label(self.frame_menus,
-                                 text="Number of iterations:")
-        self.entry_niter = Entry(self.frame_menus, textvariable=self.niter,
-                                 width=5)
+        self.canvas.get_tk_widget().pack(expand=True, fill=tk.BOTH)
 
-        self.label_fractals.grid(row=0, column=0)
-        self.menu_fractals.grid(row=0, column=1)
-        self.label_niter.grid(row=0, column=2)
-        self.entry_niter.grid(row=0, column=3)
-        #---
-
-        #--- Canvas subframe
-        self.figure = Figure(figsize=(7.8, 4.9))
-        self.canvas = FigureCanvasTkAgg(self.figure, master=self.frame_canvas)
-
-        self.canvas.get_tk_widget().grid(row=2, column=0)
-        #---
-
-        #--- Button subframe
-        self.button_plot = Button(self.frame_buttons, text="Plot",
-                                  command=self.plot)
-        self.button_clear = Button(self.frame_buttons, text="Clear",
-                                   command=self.clear_figure)
-        self.button_quit = Button(self.frame_buttons, text="Quit",
-                                  command=self.frame.quit)
+        self.toolbar = NavigationToolbar2TkAgg(self.canvas, self.frame_canvas)
+        self.toolbar.update()
+        self.canvas._tkcanvas.pack(expand=True, fill=tk.BOTH)
+        #----
+        #---- Button subframe
+        self.button_plot = tk.Button(self.frame_buttons, text="Plot",
+                                     command=self.plot)
+        self.button_clear = tk.Button(self.frame_buttons, text="Clear",
+                                      command=self.clear_figure)
+        self.button_quit = tk.Button(self.frame_buttons, text="Quit",
+                                     command=self.frame.quit)
         
-        self.button_plot.grid(row=3, column=0)
-        self.button_clear.grid(row=3, column=1)
-        self.button_quit.grid(row=3, column=2)
-        #---
+        self.button_plot.pack(expand=True, fill=tk.BOTH, side=tk.LEFT)
+        self.button_clear.pack(expand=True, fill=tk.BOTH, side=tk.LEFT)
+        self.button_quit.pack(expand=True, fill=tk.BOTH, side=tk.LEFT)
+        #----
     
     def menu_onclick(self, event):
         print "%s with %s iterations" % (self.fractal.get(), self.niter.get())
@@ -127,6 +124,7 @@ class OdeIntGui(object):
         self.canvas.draw()
 
 def center(win):
+    """Centers the window on the screen."""
     win.update_idletasks()
     width = win.winfo_width()
     height = win.winfo_height()
@@ -135,10 +133,10 @@ def center(win):
     win.geometry('{}x{}+{}+{}'.format(width, height, x, y))
 
 def main():
-    root = Tk()
+    root = tk.Tk()
     root.geometry('640x480')
     root.title("fractals GUI")
-    center(root)
+    #center(root)
     odeintgui = OdeIntGui(root)
     root.mainloop()
 
