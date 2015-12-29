@@ -9,7 +9,9 @@ matplotlib.use('TkAgg')
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 from mpl_toolkits.mplot3d import Axes3D
+import os
 import subprocess
+import sys
 import time
 import Tkinter as tk
 
@@ -24,7 +26,9 @@ fractals = {
 }
 
 class OdeIntGui(object):
-    def __init__(self, master):
+    def __init__(self, master, program_path):
+        self.program_path = program_path
+
         #---- Main frame
         self.frame = tk.Frame(master)
         self.frame.pack(expand=True, fill=tk.BOTH)
@@ -94,8 +98,9 @@ class OdeIntGui(object):
         prev_fractal = self.fractal.get()
 
     def plot(self):
-        cmd = ("../src/draw -f %s -n %s"
-               % (fractals[self.fractal.get()], self.niter.get()))
+        cmd = ("%s -f %s -n %s" % (self.program_path,
+                                   fractals[self.fractal.get()],
+                                   self.niter.get()))
         print cmd
         
         print "Computing..."
@@ -132,12 +137,28 @@ def center(win):
     y = (win.winfo_screenheight() // 2) - (height // 2)
     win.geometry('{}x{}+{}+{}'.format(width, height, x, y))
 
+def print_usage():
+    print "python fractalsgui.py [program_path]"
+
 def main():
+    if len(sys.argv) == 1:
+        print "Program path not given; defaulting to ../src/draw"
+        program_path = "../src/draw"
+    elif len(sys.argv) == 2:
+        program_path = sys.argv[1]
+        print "Using " + program_path
+    else:
+        print_usage()
+        sys.exit(0)
+
+    if not os.path.isfile(program_path):
+        raise ValueError("File " + program_path + " does not exist")
+    
     root = tk.Tk()
     root.geometry('640x480')
     root.title("fractals GUI")
     #center(root)
-    odeintgui = OdeIntGui(root)
+    odeintgui = OdeIntGui(root, program_path)
     root.mainloop()
 
 if __name__ == '__main__':
