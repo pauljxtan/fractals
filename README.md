@@ -67,9 +67,9 @@ Fractal [function_name]
 * Sierpinski's triangle [sierpinski]
 
 ### GUI ###
-A Python-based GUI (using TKinter and matplotlib for graphing) is included at __python/fractalsgui.py__. Includes all the usual matplotlib figure functionality like navigation, zooming in/out, etc. Fun stuff, give it a try!
+A Python-based GUI (using TKinter and matplotlib for graphing) is included at __python/fractalsgui.py__. Includes all the usual matplotlib figure functionality like navigation, zooming in/out, etc.
 
-N.B. The directory structure should be preserved for the program to locate the drawing program. (TODO: maybe take drawing program path as argument?)
+The program path (draw) may be supplied as a command-line argument; otherwise it defaults to ../src/draw.
 
 Dependencies:
 * Tkinter
